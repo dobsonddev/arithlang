@@ -68,5 +68,28 @@ public class Evaluator implements Visitor<Value> {
 		}
 		return new NumVal(result);
 	}
+	@Override
+	public Value visit(GreatestOfExp e) {
+		List<Exp> operands = e.all();
+		double max = Double.NEGATIVE_INFINITY; // Changed from Double.MIN_VALUE
+		for(Exp exp: operands) {
+			NumVal val = (NumVal) exp.accept(this);
+			max = Math.max(max, val.v());
+		}
+		return new NumVal(max);
+	}
+
+	@Override
+	public Value visit(LeastOfExp e) {
+		List<Exp> operands = e.all();
+		double min = Double.POSITIVE_INFINITY; // Changed from Double.MAX_VALUE
+		for(Exp exp: operands) {
+			NumVal val = (NumVal) exp.accept(this);
+			min = Math.min(min, val.v());
+		}
+		return new NumVal(min);
+	}
+
+
 
 }

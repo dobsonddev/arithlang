@@ -34,6 +34,7 @@ grammar ArithLang;
 //     | subexp
 //     | multexp
 //     | divexp
+
 //
 // The rule above in its full form, where actions are enclosed in { }
 //
@@ -43,6 +44,8 @@ grammar ArithLang;
         | s=subexp { $ast = $s.ast; }
         | m=multexp { $ast = $m.ast; }
         | d=divexp { $ast = $d.ast; }
+        | g=greatestofexp { $ast = $g.ast; }
+        | l=leastofexp { $ast = $l.ast; }
         ;
  
  // The actions { $ast = $n.ast; } means that this rule passed through 
@@ -125,9 +128,32 @@ grammar ArithLang;
  		;
 
 
+greatestofexp returns [GreatestOfExp ast]
+   locals [ArrayList<Exp> list]
+   @init { $list = new ArrayList<Exp>(); } :
+   '(' GREATEST_OF_OP
+       e=exp { $list.add($e.ast); }
+       ( e=exp { $list.add($e.ast); } )*
+   ')' { $ast = new GreatestOfExp($list); }
+   ;
+
+leastofexp returns [LeastOfExp ast]
+   locals [ArrayList<Exp> list]
+   @init { $list = new ArrayList<Exp>(); } :
+   '(' LEAST_OF_OP
+       e=exp { $list.add($e.ast); }
+       ( e=exp { $list.add($e.ast); } )*
+   ')' { $ast = new LeastOfExp($list); }
+   ;
+
+
+
  // Lexical Specification of this Programming Language
  //  - lexical specification rules start with uppercase
- 
+
+LEAST_OF_OP : '<?';
+GREATEST_OF_OP : '>?';
+
  Dot : '.' ;
 
  Number : DIGIT+ ;

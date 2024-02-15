@@ -44,6 +44,24 @@ public class Printer {
 				result += " " + exp.accept(this);
 			return result + ")";
 		}
-		
+
+		public String visit(AST.GreatestOfExp e) {
+			String result = "(>?";
+			for (AST.Exp exp : e.all()) {
+				result += " " + exp.accept(this);
+			}
+			return result + ")";
+		}
+
+		public String visit(AST.LeastOfExp e) {
+			String result = "(<?";
+			for (AST.Exp exp : e.all()) {
+				result += " " + exp.accept(this);
+			}
+			return result + ")";
+		}
+
+
+
 	}
 }
